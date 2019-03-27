@@ -1,5 +1,6 @@
 # homework_comment
 homework comment generation interface
+
 本界面有助于线上批改作业时快速生成评语，并可协助多名助教之间确定扣分点。
 + 设置总分和每一问的默认分值。
 + 添加副标题和评语并设置分值。前加和后加按钮可在任意位置插入评语。

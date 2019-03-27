@@ -1,0 +1,1 @@
+{"cal-critic":[{"type":"subtitle","contents":"Linear","critic":[["1.1 答案错误","5"],["2.2推导错误","5"]]},{"type":"subtitle","contents":"SVM","critic":[["1.1公式错误","2"]]}],"pro-critic":[{"type":"critic","contents":["（g）问未完成","10"]}],"all-critic":[{"type":"critic","contents":["做得很好，继续保持","5"]}]}

@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>线上作业评语生成</title>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+        crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="src/critic.js"></script>
+    <style type="text/css" src="src/critic.css"></style>
+
+</head>
+
+<body>
+    <button class="btn btn-link btn-block mt-0 mr-0 pl-0 pr-0" id="btn-instruction" type="button">使用说明</button>
+    <div id="div-instruction" class="container mt-5" style="width: 80%" >
+        <h2>使用说明</h2>
+        本界面有助于线上批改作业时快速生成评语，并可协助多名助教之间确定扣分点。<br>
+        一、设置总分和每一问的默认分值。<br>
+        二、添加副标题和评语并设置分值。前加和后加按钮可在任意位置插入评语。<br>
+        三、勾选本次作业包含的题型。<br>
+        四、每份作业的批改流程
+        <ul>
+            <li>选择对应的评语</li>
+            <li>点击计算分数，则自动生成分数。总评部分分数不计入。可以对每部分分数进行修改，修改后按回车则总分自动变更</li>
+            <li>点击生成评语，则根据评语和分数自动生成评语</li>
+            <li>点击复制，则评语复制到剪贴板</li>
+            <li>点击重置</li>
+        </ul>
+        五、导出评语：先点击导出评语，再点击下载评语。导入评语：点击选择文件。模板：本文件夹下的critic.json。<br>
+        六、所有文本框区域可随时编辑。<br>
+        七、按刷新即可回到页面初始状态。<br>
+        八、如发现bug或有新需求请联系yuxt16@mails.tsinghua.edu.cn。<br>
+    </div>
+    <div id="div-sys">
+         <div class="container card mx-auto mt-5 mb-5" style="width: 100%">
+            <div class="row card-header">
+                <button class="btn btn-outline-primary" id="btn-output-critic" type="button">导出评语</button></a>
+                <a href="" id="btn-save-critic">下载评语</a>
+                <div class="btn">
+                    <label for="load-critic">导入评语</label>
+                    <input type="file" id="load-critic">
+                </div>
+            </div>
+            <div class="row">
+                <!-- left panel -->
+                <div class="col-md-7">
+                    <div class="card-body" id="left-panel">
+                        <div id="cal-critic">
+                            <h4 class="card-title">计算题</h4>
+                            <button class="btn btn-link mr-3 pl-0 pr-0 btn-add-subtitle" type="button">添加副标题</button>
+                            <button class="btn btn-link mr-3 pl-0 pr-0 btn-add-critic" type="button">添加评语</button>
+                        </div>
+
+                        <div id="pro-critic">
+                            <h4 class="card-title">编程题</h4>
+                            <button class="btn btn-link mr-3 pl-0 pr-0 btn-add-subtitle" type="button">添加副标题</button>
+                            <button class="btn btn-link mr-3 pl-0 pr-0 btn-add-critic" type="button">添加评语</button>
+                        </div>
+
+                        <div id="all-critic">
+                            <h4 class="card-title">总体评价</h4>
+                            <button class="btn btn-link mr-3 pl-0 pr-0 btn-add-critic" type="button">添加评语</button>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- right panel -->
+                <div class="col-md-5">
+                    <div class="card-body" id="right-panel">
+                        <p>总分<input type="text" class="set-score" id="set-total-score" style="width:40px" value="100">分，每错一问默认扣<input type="text" class="set-score" id="set-unit-score" style="width:40px" value="5">分</p>
+                        <p>本次作业题型包含
+                            <label><input type="checkbox" id="contain-cal">计算题</label>
+                            <label><input type="checkbox" id="contain-pro">编程题</label>
+                            <label><input type="checkbox" id="contain-all">总评</label>
+                        </p>
+                        <button class="btn btn-outline-primary" id="do-cal-score" type="button">计算分数</button> 
+                        <p>计算题<input type="text" class="sub-score" id="cal-score"></p>
+                        <p>编程题<input type="text" class="sub-score" id="pro-score"></p>
+                        <p>总分<input type="text" id="all-score"></p>
+
+                        <button class="btn btn-outline-primary" id="do-final-critic" type="button">生成评语</button> 
+                        <button class="btn btn-outline-primary" id="do-copy" type="button" data-copytarget="#final-critic">复制</button> 
+                        <button class="btn btn-outline-primary" id="do-clear" type="button">重置</button> 
+
+                        <textarea class="form-control" rows="10" id="final-critic"></textarea>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
