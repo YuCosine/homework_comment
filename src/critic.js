@@ -8,14 +8,18 @@ $(document).ready(function() {
         return subtitle;
     }
 
-    function newCritic() {
+    function newCritic(critic_type) {
         var critic = '<div class="critic"><input type="checkbox">';
         critic += '<input type="text" class="critic-content" style="width:60%">';
-        critic += '分值<input type="text" class="set-score" style="width:30px" value="default-value">'
+        if (critic_type != '总体评价') {
+            critic += '分值<input type="text" class="set-score" style="width:30px" value="default-value">';
+        }
         critic += '<button class="btn btn-link mr-3 pl-0 pr-0 btn-delete" type="button">删除</button>';
         critic += '<button class="btn btn-link mr-3 pl-0 pr-0 btn-add-before" type="button">前加</button>';
         critic += '<button class="btn btn-link mr-3 pl-0 pr-0 btn-add-after" type="button">后加</button></div>';
-        critic = critic.replace('default-value', parseFloat($('#set-unit-score').val()))
+        if (critic_type != '总体评价') {
+            critic = critic.replace('default-value', parseFloat($('#set-unit-score').val()));
+        }
         return critic;
     }
 
@@ -37,7 +41,7 @@ $(document).ready(function() {
     });
 
     $('#left-panel').on('click', '.btn-add-critic', function() {
-        $(this).parent().append(newCritic());
+        $(this).parent().append(newCritic($(this).parent().find('.card-title').text()));
     });
 
     $('#left-panel').on('click', '.btn-delete', function() {
@@ -45,11 +49,11 @@ $(document).ready(function() {
     });
 
     $('#left-panel').on('click', '.btn-add-before', function() {
-        $(this).parent().before(newCritic());
+        $(this).parent().before(newCritic($(this).parent().find('.card-title').text()));
     });
 
     $('#left-panel').on('click', '.btn-add-after', function() {
-        $(this).parent().after(newCritic());
+        $(this).parent().after(newCritic($(this).parent().find('.card-title').text()));
     });
 
     $('#div-sys').on('change', '.set-score', function(){
@@ -244,6 +248,7 @@ $(document).ready(function() {
             {type: "text/plain;charset=utf-8"}
         )
         eleLink.href = URL.createObjectURL(blob)
+        eleLink.click()
     })
 
 
