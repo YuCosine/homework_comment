@@ -8,16 +8,16 @@ $(document).ready(function() {
         return subtitle;
     }
 
-    function newCritic(critic_type) {
+    function newCritic(is_all_critic) {
         var critic = '<div class="critic"><input type="checkbox">';
         critic += '<input type="text" class="critic-content" style="width:60%">';
-        if (critic_type != '总体评价') {
+        if (!is_all_critic) {
             critic += '分值<input type="text" class="set-score" style="width:30px" value="default-value">';
         }
         critic += '<button class="btn btn-link mr-3 pl-0 pr-0 btn-delete" type="button">删除</button>';
         critic += '<button class="btn btn-link mr-3 pl-0 pr-0 btn-add-before" type="button">前加</button>';
         critic += '<button class="btn btn-link mr-3 pl-0 pr-0 btn-add-after" type="button">后加</button></div>';
-        if (critic_type != '总体评价') {
+        if (!is_all_critic) {
             critic = critic.replace('default-value', parseFloat($('#set-unit-score').val()));
         }
         return critic;
@@ -41,7 +41,7 @@ $(document).ready(function() {
     });
 
     $('#left-panel').on('click', '.btn-add-critic', function() {
-        $(this).parent().append(newCritic($(this).parent().find('.card-title').text()));
+        $(this).parent().append(newCritic($(this).parent().find('.card-title').text() == '总体评价'));
     });
 
     $('#left-panel').on('click', '.btn-delete', function() {
@@ -49,11 +49,11 @@ $(document).ready(function() {
     });
 
     $('#left-panel').on('click', '.btn-add-before', function() {
-        $(this).parent().before(newCritic($(this).parent().find('.card-title').text()));
+        $(this).parent().before(newCritic($(this).parent().find('.card-title').text() == '总体评价'));
     });
 
     $('#left-panel').on('click', '.btn-add-after', function() {
-        $(this).parent().after(newCritic($(this).parent().find('.card-title').text()));
+        $(this).parent().after(newCritic($(this).parent().find('.card-title').text() == '总体评价'));
     });
 
     $('#div-sys').on('change', '.set-score', function(){
@@ -191,6 +191,7 @@ $(document).ready(function() {
             for (let critic_type of ['cal-critic', 'pro-critic', 'all-critic']) {
                 for (let item of res[critic_type]) {
                     var parent = $('#' + critic_type);
+                    var is_all_critic = (critic_type == 'all-critic');
                     if (item.type == 'subtitle') {
                         // add subtitle
                         var subtitle = newSubTitle();
@@ -207,10 +208,12 @@ $(document).ready(function() {
                     }
                     else{
                         // add critic
-                        var critic = newCritic();
+                        var critic = newCritic(is_all_critic);
                         parent.append(critic);
                         parent.children().last().find(".critic-content").val(item.contents[0]);
-                        parent.children().last().find(".set-score").val(item.contents[1]);
+                        if (!is_all_critic) {
+                            parent.children().last().find(".set-score").val(item.contents[1]);
+                        }
                     }
                 }
             }
