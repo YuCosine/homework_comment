@@ -49,11 +49,11 @@ $(document).ready(function() {
     });
 
     $('#left-panel').on('click', '.btn-add-before', function() {
-        $(this).parent().before(newCritic($(this).parent().find('.card-title').text() == '总体评价'));
+        $(this).parent().before(newCritic($(this).parent().parent().find('.card-title').text() == '总体评价'));
     });
 
     $('#left-panel').on('click', '.btn-add-after', function() {
-        $(this).parent().after(newCritic($(this).parent().find('.card-title').text() == '总体评价'));
+        $(this).parent().after(newCritic($(this).parent().parent().find('.card-title').text() == '总体评价'));
     });
 
     $('#div-sys').on('change', '.set-score', function(){
