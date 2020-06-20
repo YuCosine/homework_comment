@@ -70,10 +70,10 @@ $(document).ready(function() {
         if ($('#contain-cal').is(':checked')) {
             $('#cal-critic :checkbox').each(function(){
                 if (this.checked) {
-                    cal_score -= parseFloat($(this).parent().find('.set-score').val());
+                    cal_score += parseFloat($(this).parent().find('.set-score').val());
                 }
             });
-            $('#cal-score').val(cal_score);
+            $('#cal-score').val('+' + cal_score);
             sum_score += cal_score;
         }
         if ($('#contain-pro').is(':checked')) {
@@ -94,35 +94,49 @@ $(document).ready(function() {
     });
 
     $('#do-final-critic').click(function(){
-        var title = {'cal-critic': '计算题', 'pro-critic': '编程题', 'all-critic': '总分'};
+        var title = {'cal-critic': '加分项', 'pro-critic': '未完成项', 'all-critic': '总分'};
         var critic = '';
         for (let critic_type of ['cal-critic', 'pro-critic', 'all-critic']) {
             if (!$('#contain-' + critic_type.slice(0, 3)).is(':checked')) {
                 continue;
             }
-            critic += title[critic_type];
             var score = $('#' + critic_type.slice(0, 3) + '-score').val();
-            if (score == 0 && critic_type != 'all-critic') {
-                critic += '-0\n';
-            }
-            else {
-                critic += score + '\n';
+            if (score != 0){
+                critic += title[critic_type] + '共' + score + '\n';
             }
             $('#' + critic_type + ' .subtitle').each(function(){
                 var sub_critic = '';
                 $(this).find('.critic').each(function() {
                     if ($(this).find(':checkbox').is(':checked')) {
-                        sub_critic += $(this).find('.critic-content').val() + '\n';
+                        sub_critic += '\t' + $(this).find('.critic-content').val();
+                        if (critic_type == 'cal-critic') {
+                            score = $(this).find('.set-score').val();
+                            sub_critic += ' +' + score;
+                        }
+                        if (critic_type == 'pro-critic') {
+                            score = $(this).find('.set-score').val();
+                            sub_critic += ' -' + score;
+                        }
+                        sub_critic += '\n';
                     }
                 });
                 if (sub_critic.length > 0) {
-                    sub_critic = $(this).find('.subtitle-content').val() + '\n' + sub_critic
+                    sub_critic = '\t' + $(this).find('.subtitle-content').val() + '\n' + sub_critic
                     critic += sub_critic;
                 }
             });
             $('#' + critic_type + '>.critic').each(function(){
                 if ($(this).find(':checkbox').is(':checked')) {
-                    critic += $(this).find('.critic-content').val() + '\n';
+                    critic += '\t' + $(this).find('.critic-content').val();
+                    if (critic_type == 'cal-critic') {
+                        score = $(this).find('.set-score').val();
+                        critic += ' +' + score;
+                    }
+                    if (critic_type == 'pro-critic') {
+                        score = $(this).find('.set-score').val();
+                        critic += ' -' + score;
+                    }
+                    critic += '\n';
                 }
             });
         }

@@ -22,7 +22,7 @@
     <div id="div-instruction" class="container mt-5" style="width: 80%" >
         <h2>使用说明</h2>
         本界面有助于线上批改作业时快速生成评语，并可协助多名助教之间确定扣分点。经测试windows、MAC、Linux下的chrome，windows下的edge均可使用。<br>
-        一、设置总分和每一问的默认分值。每一问的分值用倒扣的方式计算。<br>
+        一、设置总分和每一问的默认分值。<br>
         二、添加副标题和评语并设置分值。前加和后加按钮可在任意位置插入评语。<br>
         三、勾选本次作业包含的题型。<br>
         四、每份作业的批改流程
@@ -53,13 +53,13 @@
                 <div class="col-md-7">
                     <div class="card-body" id="left-panel">
                         <div id="cal-critic">
-                            <h4 class="card-title">计算题</h4>
+                            <h4 class="card-title">加分项</h4>
                             <button class="btn btn-link mr-3 pl-0 pr-0 btn-add-subtitle" type="button">添加副标题</button>
                             <button class="btn btn-link mr-3 pl-0 pr-0 btn-add-critic" type="button">添加评语</button>
                         </div>
 
                         <div id="pro-critic">
-                            <h4 class="card-title">编程题</h4>
+                            <h4 class="card-title">未完成项</h4>
                             <button class="btn btn-link mr-3 pl-0 pr-0 btn-add-subtitle" type="button">添加副标题</button>
                             <button class="btn btn-link mr-3 pl-0 pr-0 btn-add-critic" type="button">添加评语</button>
                         </div>
@@ -74,15 +74,15 @@
                 <!-- right panel -->
                 <div class="col-md-5">
                     <div class="card-body" id="right-panel">
-                        <p>总分<input type="text" class="set-score" id="set-total-score" style="width:40px" value="100">分，每错一问默认扣<input type="text" class="set-score" id="set-unit-score" style="width:40px" value="5">分</p>
+                        <p>总分<input type="text" class="set-score" id="set-total-score" style="width:40px" value="80">分，每错一问默认扣<input type="text" class="set-score" id="set-unit-score" style="width:40px" value="5">分</p>
                         <p>本次作业题型包含
-                            <label><input type="checkbox" id="contain-cal">计算题</label>
-                            <label><input type="checkbox" id="contain-pro">编程题</label>
-                            <label><input type="checkbox" id="contain-all">总评</label>
+                            <label><input type="checkbox" id="contain-cal" checked="checked">加分项</label>
+                            <label><input type="checkbox" id="contain-pro" checked="checked">未完成项</label>
+                            <label><input type="checkbox" id="contain-all" checked="checked">总评</label>
                         </p>
                         <button class="btn btn-outline-primary" id="do-cal-score" type="button">计算分数</button> 
-                        <p>计算题<input type="text" class="sub-score" id="cal-score"></p>
-                        <p>编程题<input type="text" class="sub-score" id="pro-score"></p>
+                        <p>加分项<input type="text" class="sub-score" id="cal-score"></p>
+                        <p>未完成项<input type="text" class="sub-score" id="pro-score"></p>
                         <p>总分<input type="text" id="all-score"></p>
 
                         <button class="btn btn-outline-primary" id="do-final-critic" type="button">生成评语</button> 
