@@ -167,12 +167,14 @@ $(document).ready(function() {
                     parent.append(subtitle);
                     var sub_parent = parent.children().last();
                     sub_parent.find(".subtitle-content").val(item.contents);
-                    for (let sub_item of item.critic) {
-                        // add critic
-                        var critic = newCritic();
-                        sub_parent.append(critic);
-                        sub_parent.children().last().find(".critic-content").val(sub_item[0]);
-                        sub_parent.children().last().find(".set-score").val(sub_item[1]);
+                    if (item.hasOwnProperty('critic')) {
+                        for (let sub_item of item.critic) {
+                            // add critic
+                            var critic = newCritic();
+                            sub_parent.append(critic);
+                            sub_parent.children().last().find(".critic-content").val(sub_item[0]);
+                            sub_parent.children().last().find(".set-score").val(sub_item[1]);
+                        }
                     }
                 }
                 else{
