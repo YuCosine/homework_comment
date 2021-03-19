@@ -134,6 +134,61 @@ $(document).ready(function() {
         $('#right-panel :input').not('.set-score').val('');
     });
 
+    function convert_critic_to_json() {
+        var json = {'cal-critic':[], 'pro-critic':[], 'all-critic':[]};
+        for (let critic_type of ['cal-critic', 'pro-critic', 'all-critic']) {
+            $('#'+critic_type+' .subtitle').each(function(){
+                var subtitle = {'type': 'subtitle'};
+                subtitle.contents = $(this).find('.subtitle-content').val();
+                var critic = [];
+                $(this).find('.critic-content').each(function(){
+                    critic.push([this.value, $(this).parent().find('.set-score').val()]);
+                })
+                if (critic.length > 0) {subtitle.critic = critic;}
+                json[critic_type].push(subtitle);
+            });
+            $('#'+critic_type+'>.critic').each(function(){
+                var critic = {'type': 'critic'};
+                critic.contents = [$(this).find('.critic-content').val(), $(this).find('.set-score').val()];
+                json[critic_type].push(critic);
+            });
+        }
+        return JSON.stringify(json);
+    }
+
+    function load_json_to_critic(json){
+        for (let critic_type of ['cal-critic', 'pro-critic', 'all-critic']) {
+            for (let item of json[critic_type]) {
+                var parent = $('#' + critic_type);
+                var is_all_critic = (critic_type == 'all-critic');
+                if (item.type == 'subtitle') {
+                    // add subtitle
+                    var subtitle = newSubTitle();
+                    parent.append(subtitle);
+                    var sub_parent = parent.children().last();
+                    sub_parent.find(".subtitle-content").val(item.contents);
+                    for (let sub_item of item.critic) {
+                        // add critic
+                        var critic = newCritic();
+                        sub_parent.append(critic);
+                        sub_parent.children().last().find(".critic-content").val(sub_item[0]);
+                        sub_parent.children().last().find(".set-score").val(sub_item[1]);
+                    }
+                }
+                else{
+                    // add critic
+                    var critic = newCritic(is_all_critic);
+                    parent.append(critic);
+                    parent.children().last().find(".critic-content").val(item.contents[0]);
+                    if (!is_all_critic) {
+                        parent.children().last().find(".set-score").val(item.contents[1]);
+                    }
+                }
+            }
+        }
+    }
+
+    // save and load
     // 点击自动复制
     // click events
     // 添加点击事件
@@ -187,72 +242,49 @@ $(document).ready(function() {
         const reader = new FileReader();
         reader.readAsText(files);
         reader.onload = () => {
-            const res = JSON.parse(reader.result);
-            for (let critic_type of ['cal-critic', 'pro-critic', 'all-critic']) {
-                for (let item of res[critic_type]) {
-                    var parent = $('#' + critic_type);
-                    var is_all_critic = (critic_type == 'all-critic');
-                    if (item.type == 'subtitle') {
-                        // add subtitle
-                        var subtitle = newSubTitle();
-                        parent.append(subtitle);
-                        var sub_parent = parent.children().last();
-                        sub_parent.find(".subtitle-content").val(item.contents);
-                        for (let sub_item of item.critic) {
-                            // add critic
-                            var critic = newCritic();
-                            sub_parent.append(critic);
-                            sub_parent.children().last().find(".critic-content").val(sub_item[0]);
-                            sub_parent.children().last().find(".set-score").val(sub_item[1]);
-                        }
-                    }
-                    else{
-                        // add critic
-                        var critic = newCritic(is_all_critic);
-                        parent.append(critic);
-                        parent.children().last().find(".critic-content").val(item.contents[0]);
-                        if (!is_all_critic) {
-                            parent.children().last().find(".set-score").val(item.contents[1]);
-                        }
-                    }
-                }
-            }
+            const json = JSON.parse(reader.result);
+            load_json_to_critic(json);
         }
     }
 
 
     const eleLink = document.getElementById('btn-save-critic');
 
-    $('#btn-output-critic').click(function(){
+    $('#btn-output-critic').click(function() {
         eleLink.download = 'critic.json';
         // 字符内容转变成blob地址
-        var json = {'cal-critic':[], 'pro-critic':[], 'all-critic':[]};
-        for (let critic_type of ['cal-critic', 'pro-critic', 'all-critic']) {
-            $('#'+critic_type+' .subtitle').each(function(){
-                var subtitle = {'type': 'subtitle'};
-                subtitle.contents = $(this).find('.subtitle-content').val();
-                var critic = [];
-                $(this).find('.critic-content').each(function(){
-                    critic.push([this.value, $(this).parent().find('.set-score').val()]);
-                })
-                if (critic.length > 0) {subtitle.critic = critic;}
-                json[critic_type].push(subtitle);
-            });
-            $('#'+critic_type+'>.critic').each(function(){
-                var critic = {'type': 'critic'};
-                critic.contents = [$(this).find('.critic-content').val(), $(this).find('.set-score').val()];
-                json[critic_type].push(critic);
-            });
-        }
-        console.log(json);
-
         const blob = new Blob(
-            [JSON.stringify(json)],
+            [convert_critic_to_json()],
             {type: "text/plain;charset=utf-8"}
         )
         eleLink.href = URL.createObjectURL(blob)
         eleLink.click()
     })
 
+    if (!window.localStorage) {
+        alert('您的浏览器不支持 localStorage 技术!');
+    }
+    else {
+        var spanObj = document.getElementById('LastSaveTime');
+        var saveTimer= setInterval(function(){
+        var str = convert_critic_to_json();
+            if (str.length>50) {
+                localStorage.setItem("CriticJson", str);
+                var d = new Date();
+                var YMDHMS = d.getFullYear() + "-" +(d.getMonth()+1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+                spanObj.innerText = YMDHMS;
+                // setTimeout(function(){ spanObj.innerText=''; },2000);
+            }
+        },60000); //每隔1分钟保存一次
+        $('#StopSave').click(function() {
+            clearInterval(saveTimer); //停止保存
+            //localStorage.removeItem("CriticJson"); //清空
+        });
+        $('#Restore').click(function() {
+            var str = localStorage.getItem("CriticJson");
+            const json = JSON.parse(str);            
+            load_json_to_critic(json);
+        });
+    }
 
 });
