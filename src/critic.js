@@ -134,6 +134,25 @@ $(document).ready(function() {
         $('#right-panel :input').not('.set-score').val('');
     });
 
+    $('#ClearPage').click(function(){
+        delete_all_critic();
+    });
+
+    function delete_all_critic() {
+        $('#set-total-score').val('test');
+        for (let critic_type of ['cal-critic', 'pro-critic', 'all-critic']) {
+            $('#'+critic_type+' .subtitle').each(function(){
+                $(this).find('.critic').each(function() {
+                    $(this).remove();
+                });
+                $(this).remove();
+            });
+            $('#'+critic_type+' .critic').each(function(){
+                $(this).remove();
+            });
+        }
+    }
+
     function convert_critic_to_json() {
         var json = {'cal-critic':[], 'pro-critic':[], 'all-critic':[]};
         for (let critic_type of ['cal-critic', 'pro-critic', 'all-critic']) {
@@ -275,17 +294,24 @@ $(document).ready(function() {
                 var d = new Date();
                 var YMDHMS = d.getFullYear() + "-" +(d.getMonth()+1) + "-" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
                 spanObj.innerText = YMDHMS;
+                localStorage.setItem("SaveTime", YMDHMS);
                 // setTimeout(function(){ spanObj.innerText=''; },2000);
             }
         },60000); //每隔1分钟保存一次
+        // },10000); //debug：每隔10秒保存一次 
         $('#StopSave').click(function() {
             clearInterval(saveTimer); //停止保存
             //localStorage.removeItem("CriticJson"); //清空
         });
         $('#Restore').click(function() {
-            var str = localStorage.getItem("CriticJson");
-            const json = JSON.parse(str);            
-            load_json_to_critic(json);
+            var confirm_txt = "将清空当前页面内容，并回复" + localStorage.getItem("SaveTime") + "保存的页面内容。是否继续？"
+            var r = confirm(confirm_txt);
+            if (r == true) {
+                var str = localStorage.getItem("CriticJson");
+                const json = JSON.parse(str);            
+                delete_all_critic();
+                load_json_to_critic(json);
+            }
         });
     }
 

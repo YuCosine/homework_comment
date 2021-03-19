@@ -36,7 +36,7 @@
         五、导出评语：点击导出评语。导入评语：点击选择文件。模板：本文件夹下的critic.json。<br>
         六、所有文本框区域可随时编辑。<br>
         七、按刷新即可回到页面初始状态。<br>
-        八、本页面每隔1分钟自动保存一次评语，如果不慎关闭网页，可在重新打开后点击“立即回复评语”（如当前页面已有评语，请刷新页面再点击此按钮）。如果长时间不更新评语，可点击“停止自动保存”。
+        八、本页面每隔1分钟自动保存一次评语，如果不慎关闭网页，或想恢复之前填写的内容，可点击“立即回复评语”。如果长时间不更新评语，可点击“停止自动保存”。如果想清空当前评语，可点击“清空评语”。
         九、如发现bug或有新需求请联系yuxt16@mails.tsinghua.edu.cn。<br>
     </div>
     <div id="div-sys">
@@ -102,8 +102,9 @@
                     本页面每隔1分钟自动保存一次评语。
                     上次自动保存时间：<span id="LastSaveTime"></span>
                     <div>
-                        <button class="btn btn-link mr-3 pl-0 pr-0" type="button" id="StopSave">停止自动保存</button>
-                        <button class="btn btn-link mr-3 pl-0 pr-0" type="button" id="Restore">立即恢复评语</button>（如当前页面已有评语，请刷新页面再点击此按钮）
+                        <button class="btn btn-link mr-3 pl-0 pr-0" type="button" id="ClearPage">清空评语</button>
+                        <button class="btn btn-link mr-3 pl-0 pr-0" type="button" id="StopSave">停止保存</button>
+                        <button class="btn btn-link mr-3 pl-0 pr-0" type="button" id="Restore">立即恢复</button>
                     </div>
                 </div>
             </div>
